@@ -1,19 +1,20 @@
-import pandas as pd
-from sklearn.datasets import load_iris
-from sklearn.ensemble import RandomForestClassifier
+import streamlit as st
 import pickle
+import numpy as np
 
-# Load dataset (Iris dataset as an example)
-iris = load_iris()
-X = pd.DataFrame(iris.data, columns=iris.feature_names)
-y = iris.target
+# Load the trained model
+model = pickle.load(open('model/model.pkl', 'rb'))
 
-# Train Random Forest Model
-model = RandomForestClassifier(n_estimators=100, random_state=42)
-model.fit(X, y)
+st.title("🚀 End-to-End Machine Learning Capstone App")
+st.write("Enter the feature values below to get predictions.")
 
-# Save the trained model to disk
-with open('model.pkl', 'wb') as f:
-    pickle.dump(model, f)
+# Input fields
+sepal_length = st.number_input('Sepal Length', value=5.1)
+sepal_width = st.number_input('Sepal Width', value=3.5)
+petal_length = st.number_input('Petal Length', value=1.4)
+petal_width = st.number_input('Petal Width', value=0.2)
 
-print("Model trained and saved successfully as model.pkl!")
+if st.button('Predict'):
+    features = np.array([[sepal_length, sepal_width, petal_length, petal_width]])
+    prediction = model.predict(features)
+    st.success(f'✨ Predicted Class / Output: {prediction[0]}')
